@@ -154,8 +154,8 @@ class EventsControllerTest {
 	private Event getValidEvent() {
 		Event event = getEmptyEvent();
 		event.setCreatedTime(Instant.now().toEpochMilli());
-		event.setCorrelationId(UUID.randomUUID().toString());
-		event.setName(EVENT_TYPE);
+		event.setEntityId(UUID.randomUUID().toString());
+		event.setType(EVENT_TYPE);
 		event.setId(UUID.randomUUID().toString());
 		event.setStatus(STATUS);
 		event.setPayload(new TestEvent());
@@ -165,7 +165,7 @@ class EventsControllerTest {
 	private Event getInValidEvent() {
 		Event event = getEmptyEvent();
 		event.setCreatedTime(Instant.now().toEpochMilli());
-		event.setCorrelationId(UUID.randomUUID().toString());
+		event.setEntityId(UUID.randomUUID().toString());
 		event.setId(UUID.randomUUID().toString());
 		event.setPayload(new TestEvent());
 		return event;

@@ -18,10 +18,10 @@ public class Event {
 	
 	private String id;
 	@NotBlank(message = "Event name cannot be null or empty.")
-	private String name;
+	private String type;
 	private String status;
-	@NotBlank(message = "CorrelationId cannot be null or empty.")
-	private String correlationId;
+	@NotBlank(message = "EntityId cannot be null or empty.")
+	private String entityId;
 	private long createdTime;
 	@NotNull(message = "Event payload cannot be null or empty.")
 	private Object payload;

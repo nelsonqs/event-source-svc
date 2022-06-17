@@ -23,21 +23,21 @@ public class EventsDao implements EventService<Event, String> {
 
 	@Override
 	public Event save(Event event) {		
-		EventEntity entity = EventEntity.builder().name(event.getName())
+		EventEntity entity = EventEntity.builder().type(event.getType())
 				.status(event.getStatus()).createdTime(Instant.now().toEpochMilli())
-				.correlationId(event.getCorrelationId()).payload(event.getPayload()).build();
+				.entityId(event.getEntityId()).payload(event.getPayload()).build();
 		EventEntity savedEntity = repository.save(entity);		
-		return Event.builder().id(savedEntity.getId()).name(savedEntity.getName())
+		return Event.builder().id(savedEntity.getId()).type(savedEntity.getType())
 				.createdTime(savedEntity.getCreatedTime()).status(savedEntity.getStatus())
-				.correlationId(savedEntity.getCorrelationId()).payload(savedEntity.getPayload()).build();
+				.entityId(savedEntity.getEntityId()).payload(savedEntity.getPayload()).build();
 	}
 
 	@Override
 	public Event find(String id) {
 		EventEntity entity = repository.findById(id).orElseThrow(()->new EventNotFoundException(String.format(EventSourceErrorCode.EventNotFound.getMessage(), id)));
-		return Event.builder().id(entity.getId()).name(entity.getName())
+		return Event.builder().id(entity.getId()).type(entity.getType())
 				.createdTime(entity.getCreatedTime()).status(entity.getStatus())
-				.correlationId(entity.getCorrelationId()).payload(entity.getPayload()).build();
+				.entityId(entity.getEntityId()).payload(entity.getPayload()).build();
 	}
 
 	@Override
@@ -47,32 +47,32 @@ public class EventsDao implements EventService<Event, String> {
 			throw new NoDataFoundException(EventSourceErrorCode.NoDataFound);
 		}		
 		return events.stream()
-					  .map(evt->Event.builder().id(evt.getId()).name(evt.getName())
-					  .createdTime(evt.getCreatedTime()).status(evt.getStatus()).correlationId(evt.getCorrelationId()).payload(evt.getPayload()).build())
+					  .map(evt->Event.builder().id(evt.getId()).type(evt.getType())
+					  .createdTime(evt.getCreatedTime()).status(evt.getStatus()).entityId(evt.getEntityId()).payload(evt.getPayload()).build())
 					  .collect(Collectors.toList());
 	}
 
 	@Override
 	public List<Event> findByCorrelationId(String correlationId) {
-		List<EventEntity> events = repository.findByCorrelationId(correlationId);
+		List<EventEntity> events = repository.findByEntityId(correlationId);
 		if(events.isEmpty()) {
 			throw new NoDataFoundException(EventSourceErrorCode.NoDataFound);
 		}
 		return events.stream()
-				  .map(evt->Event.builder().id(evt.getId()).name(evt.getName())
-				  .createdTime(evt.getCreatedTime()).status(evt.getStatus()).correlationId(evt.getCorrelationId()).payload(evt.getPayload()).build())
+				  .map(evt->Event.builder().id(evt.getId()).type(evt.getType())
+				  .createdTime(evt.getCreatedTime()).status(evt.getStatus()).entityId(evt.getEntityId()).payload(evt.getPayload()).build())
 				  .collect(Collectors.toList());
 	}
 
 	@Override
 	public List<Event> findByCorrelationIdAndEventName(String correlationId, String eventName) {
-		List<EventEntity> events = repository.findByCorrelationIdAndName(correlationId,eventName);
+		List<EventEntity> events = repository.findByEntityIdAndType(correlationId,eventName);
 		if(events.isEmpty()) {
 			throw new NoDataFoundException(EventSourceErrorCode.NoDataFound);
 		}
 		return events.stream()
-				  .map(evt->Event.builder().id(evt.getId()).name(evt.getName())
-				  .createdTime(evt.getCreatedTime()).status(evt.getStatus()).correlationId(evt.getCorrelationId()).payload(evt.getPayload()).build())
+				  .map(evt->Event.builder().id(evt.getId()).type(evt.getType())
+				  .createdTime(evt.getCreatedTime()).status(evt.getStatus()).entityId(evt.getEntityId()).payload(evt.getPayload()).build())
 				  .collect(Collectors.toList());
 	}
 }

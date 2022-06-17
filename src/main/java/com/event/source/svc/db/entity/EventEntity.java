@@ -32,9 +32,9 @@ public class EventEntity {
 	@GeneratedValue(generator = "UUID")
 	@GenericGenerator(name = "UUID",strategy = "uuid2")
 	private String id;
-	private String name;
+	private String type;
 	private String status;
-	private String correlationId;
+	private String entityId;
 	private long createdTime;
 	@Column(columnDefinition = "jsonb")
 	@Type(type = "jsonbType")

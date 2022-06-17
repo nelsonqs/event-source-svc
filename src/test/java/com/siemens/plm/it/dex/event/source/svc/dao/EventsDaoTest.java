@@ -39,7 +39,7 @@ class EventsDaoTest {
 		when(eventRepository.save(ArgumentMatchers.any())).thenReturn(getValidEventEntity());
 		Event actual = underTest.save(getValidEvent());
 		assertNotNull(actual);
-		assertEquals(EVENT_TYPE, actual.getName());
+		assertEquals(EVENT_TYPE, actual.getType());
 	}
 
 	@Test
@@ -48,7 +48,7 @@ class EventsDaoTest {
 		when(eventRepository.findById(ArgumentMatchers.matches(entity.getId()))).thenReturn(Optional.of(entity));
 		Event actual = underTest.find(entity.getId());
 		assertNotNull(actual);
-		assertEquals(EVENT_TYPE, actual.getName());
+		assertEquals(EVENT_TYPE, actual.getType());
 	}
 	
 	@Test
@@ -82,7 +82,7 @@ class EventsDaoTest {
 	void testFindByCorrelationIdIdealCase() {
 		List<EventEntity> events = new ArrayList<>(1);
 		events.add(getValidEventEntity());
-		when(eventRepository.findByCorrelationId(ArgumentMatchers.anyString())).thenReturn(events);
+		when(eventRepository.findByEntityId(ArgumentMatchers.anyString())).thenReturn(events);
 		List<Event> actual = underTest.findByCorrelationId(UUID.randomUUID().toString());
 		assertNotNull(actual);
 		assertFalse(actual.isEmpty());
@@ -91,7 +91,7 @@ class EventsDaoTest {
 	
 	@Test
 	void testFindByCorrelationIdNoDataFoundCase() {
-		when(eventRepository.findByCorrelationId(ArgumentMatchers.anyString())).thenReturn(new ArrayList<>(0));
+		when(eventRepository.findByEntityId(ArgumentMatchers.anyString())).thenReturn(new ArrayList<>(0));
 		assertThrows(NoDataFoundException.class, ()->{
 			underTest.findByCorrelationId(UUID.randomUUID().toString());
 		});
@@ -101,7 +101,7 @@ class EventsDaoTest {
 	void testFindByCorrelationIdAndEventNameIdealCase() {
 		List<EventEntity> events = new ArrayList<>(1);
 		events.add(getValidEventEntity());
-		when(eventRepository.findByCorrelationIdAndName(ArgumentMatchers.anyString(),ArgumentMatchers.anyString())).thenReturn(events);
+		when(eventRepository.findByEntityIdAndType(ArgumentMatchers.anyString(),ArgumentMatchers.anyString())).thenReturn(events);
 		List<Event> actual = underTest.findByCorrelationIdAndEventName(UUID.randomUUID().toString(),EVENT_TYPE);
 		assertNotNull(actual);
 		assertFalse(actual.isEmpty());
@@ -110,7 +110,7 @@ class EventsDaoTest {
 	
 	@Test
 	void testFindByCorrelationIdAndEventNameNoDataFoundCase() {
-		when(eventRepository.findByCorrelationIdAndName(ArgumentMatchers.anyString(),ArgumentMatchers.anyString())).thenReturn(new ArrayList<>(0));
+		when(eventRepository.findByEntityIdAndType(ArgumentMatchers.anyString(),ArgumentMatchers.anyString())).thenReturn(new ArrayList<>(0));
 		assertThrows(NoDataFoundException.class, ()->{
 			underTest.findByCorrelationIdAndEventName(UUID.randomUUID().toString(),EVENT_TYPE);
 		});
@@ -123,8 +123,8 @@ class EventsDaoTest {
 	private Event getValidEvent() {
 		Event event = getEmptyEvent();
 		event.setCreatedTime(Instant.now().toEpochMilli());
-		event.setCorrelationId(UUID.randomUUID().toString());
-		event.setName(EVENT_TYPE);
+		event.setEntityId(UUID.randomUUID().toString());
+		event.setType(EVENT_TYPE);
 		event.setId(UUID.randomUUID().toString());
 		event.setStatus(STATUS);
 		event.setPayload(new TestEvent());
@@ -134,9 +134,9 @@ class EventsDaoTest {
 	private EventEntity getValidEventEntity() {
 		return EventEntity.builder()
 				.id(UUID.randomUUID().toString())
-				.correlationId(UUID.randomUUID().toString())
+				.entityId(UUID.randomUUID().toString())
 				.createdTime(Instant.now().toEpochMilli())
-				.name(EVENT_TYPE)
+				.type(EVENT_TYPE)
 				.status(STATUS)
 				.payload(new TestEvent())
 				.build();

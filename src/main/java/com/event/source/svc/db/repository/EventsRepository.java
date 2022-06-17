@@ -8,8 +8,8 @@ import com.event.source.svc.db.entity.EventEntity;
 
 public interface EventsRepository extends JpaRepository<EventEntity, String> {
 	
-	List<EventEntity> findByCorrelationId(String correlationId);
+	List<EventEntity> findByEntityId(String entityId);
 	
-	List<EventEntity> findByCorrelationIdAndName(String correlationId,String name);
+	List<EventEntity> findByEntityIdAndType(String entityId,String type);
 
 }
