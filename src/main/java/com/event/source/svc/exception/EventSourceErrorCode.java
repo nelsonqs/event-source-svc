@@ -11,7 +11,7 @@ public enum EventSourceErrorCode {
 	ValidationFailed(1001,FailureType.InvalidInput,"Validation failed."),
 	EmptyEventName(1002,FailureType.InvalidInput,"Event name cannot be null or empty."),
 	EmptyEventStatus(1003,FailureType.InvalidInput,"Event status cannot be null or empty."),
-	EmptyEventCorrelationId(1004,FailureType.InvalidInput,"Event correlationId cannot be null or empty."),
+	EmptyEventCodAgenda(1004,FailureType.InvalidInput,"Event codAgenda cannot be null or empty."),
 	EmptyEventPayload(1005,FailureType.InvalidInput,"Event payload cannot be null or empty."),	
 	
 	//Event related error codes

@@ -11,6 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -40,6 +41,7 @@ class EventsControllerTest {
 	@Autowired private MockMvc mockMvc;	
 	private static final String EVENT_TYPE = "EVENT";
 	private static final String STATUS = "IN_PROGRESS";
+	private static final String USER = "JAG";
 
 	@Test
 	void testPushEventIdealCase() throws JsonProcessingException, Exception {
@@ -77,27 +79,27 @@ class EventsControllerTest {
 	}
 
 	@Test
-	void testRetrieveEventsByCorrelationIdIdealCase() throws Exception {		
-		when(eventService.findByCorrelationId(ArgumentMatchers.anyString())).thenReturn(getEventList());
-		this.mockMvc.perform(get("/events/correlationid/{correlationId}",UUID.randomUUID().toString())
+	void testRetrieveEventsByCodAgendaIdealCase() throws Exception {
+		when(eventService.findByCodAgenda(ArgumentMatchers.anyString())).thenReturn(getEventList());
+		this.mockMvc.perform(get("/events/codAgenda/{codAgenda}",UUID.randomUUID().toString())
 				.characterEncoding(StandardCharsets.UTF_8.toString())
 				.accept(MediaType.APPLICATION_JSON))
 				.andDo(print()).andExpect(status().is2xxSuccessful());	
 	}
 	
 	@Test
-	void testRetrieveEventsByCorrelationIdAndEventNameIdealCase() throws Exception {		
-		when(eventService.findByCorrelationId(ArgumentMatchers.anyString())).thenReturn(getEventList());
-		this.mockMvc.perform(get("/events/correlationid/{correlationId}/eventname/{eventName}",UUID.randomUUID().toString(),"sap_validation")
+	void testRetrieveEventsByCodAgendaAndEventNameIdealCase() throws Exception {
+		when(eventService.findByCodAgenda(ArgumentMatchers.anyString())).thenReturn(getEventList());
+		this.mockMvc.perform(get("/events/codAgenda/{codAgenda}/eventname/{eventName}",UUID.randomUUID().toString(),"sap_validation")
 				.characterEncoding(StandardCharsets.UTF_8.toString())
 				.accept(MediaType.APPLICATION_JSON))
 				.andDo(print()).andExpect(status().is2xxSuccessful());	
 	}
 	
 	@Test
-	void testRetrieveEventsByCorrelationIdNotDataFoundCase() throws Exception {
-		when(eventService.findByCorrelationId(ArgumentMatchers.anyString())).thenThrow(new NoDataFoundException(EventSourceErrorCode.NoDataFound));
-		this.mockMvc.perform(get("/events/correlationid/{correlationId}",UUID.randomUUID().toString())
+	void testRetrieveEventsByCodAgendaNotDataFoundCase() throws Exception {
+		when(eventService.findByCodAgenda(ArgumentMatchers.anyString())).thenThrow(new NoDataFoundException(EventSourceErrorCode.NoDataFound));
+		this.mockMvc.perform(get("/events/codAgenda/{codAgenda}",UUID.randomUUID().toString())
 				.characterEncoding(StandardCharsets.UTF_8.toString())
 				.accept(MediaType.APPLICATION_JSON))
 				.andDo(print()).andExpect(status().is4xxClientError())
@@ -105,9 +107,9 @@ class EventsControllerTest {
 	}
 	
 	@Test
-	void testEventsByCorrelationIdInternelServerErrorCase() throws JsonProcessingException, Exception {
-		when(eventService.findByCorrelationId(ArgumentMatchers.anyString())).thenThrow(new EventSourceException(EventSourceErrorCode.DefaultException));
-		this.mockMvc.perform(get("/events/correlationid/{correlationId}",UUID.randomUUID().toString())
+	void testEventsByCodAgendaInternelServerErrorCase() throws JsonProcessingException, Exception {
+		when(eventService.findByCodAgenda(ArgumentMatchers.anyString())).thenThrow(new EventSourceException(EventSourceErrorCode.DefaultException));
+		this.mockMvc.perform(get("/events/codAgenda/{codAgenda}",UUID.randomUUID().toString())
 				.characterEncoding(StandardCharsets.UTF_8.toString())
 				.accept(MediaType.APPLICATION_JSON))
 				.andDo(print()).andExpect(status().is5xxServerError())
@@ -154,20 +156,28 @@ class EventsControllerTest {
 	private Event getValidEvent() {
 		Event event = getEmptyEvent();
 		event.setCreatedTime(Instant.now().toEpochMilli());
-		event.setEntityId(UUID.randomUUID().toString());
-		event.setType(EVENT_TYPE);
+		event.setCodAgenda(UUID.randomUUID().toString());
+		event.setTypeEvent(EVENT_TYPE);
 		event.setId(UUID.randomUUID().toString());
 		event.setStatus(STATUS);
-		event.setPayload(new TestEvent());
+		event.setAgendaBasica(new TestEvent());
+		event.setAgendaDetalle(new TestEvent());
+		event.setCreateDate(new Date());
+		event.setUpdateDate(new Date());
+		event.setCodUser(USER);
 		return event;
 	}
 	
 	private Event getInValidEvent() {
 		Event event = getEmptyEvent();
 		event.setCreatedTime(Instant.now().toEpochMilli());
-		event.setEntityId(UUID.randomUUID().toString());
+		event.setCodAgenda(UUID.randomUUID().toString());
 		event.setId(UUID.randomUUID().toString());
-		event.setPayload(new TestEvent());
+		event.setAgendaBasica(new TestEvent());
+		event.setAgendaDetalle(new TestEvent());
+		event.setCreateDate(new Date());
+		event.setUpdateDate(new Date());
+		event.setCodUser(USER);
 		return event;
 	}
 	

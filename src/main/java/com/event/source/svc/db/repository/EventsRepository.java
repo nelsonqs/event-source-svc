@@ -8,8 +8,8 @@ import com.event.source.svc.db.entity.EventEntity;
 
 public interface EventsRepository extends JpaRepository<EventEntity, String> {
 	
-	List<EventEntity> findByEntityId(String entityId);
+	List<EventEntity> findByCodAgenda(String entityId);
 	
-	List<EventEntity> findByEntityIdAndType(String entityId,String type);
+	List<EventEntity> findByCodAgendaAndTypeEvent(String entityId, String type);
 
 }

@@ -4,10 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,6 +29,8 @@ class EventsDaoTest {
 	private static final String EVENT_TYPE = "EVENT";
 	private static final String STATUS = "IN_PROGRESS";
 
+	private static final String USER = "JAG";
+
 	@InjectMocks private EventsDao underTest;
 
 	@Test
@@ -39,7 +38,7 @@ class EventsDaoTest {
 		when(eventRepository.save(ArgumentMatchers.any())).thenReturn(getValidEventEntity());
 		Event actual = underTest.save(getValidEvent());
 		assertNotNull(actual);
-		assertEquals(EVENT_TYPE, actual.getType());
+		assertEquals(EVENT_TYPE, actual.getTypeEvent());
 	}
 
 	@Test
@@ -48,7 +47,7 @@ class EventsDaoTest {
 		when(eventRepository.findById(ArgumentMatchers.matches(entity.getId()))).thenReturn(Optional.of(entity));
 		Event actual = underTest.find(entity.getId());
 		assertNotNull(actual);
-		assertEquals(EVENT_TYPE, actual.getType());
+		assertEquals(EVENT_TYPE, actual.getTypeEvent());
 	}
 	
 	@Test
@@ -82,8 +81,8 @@ class EventsDaoTest {
 	void testFindByCorrelationIdIdealCase() {
 		List<EventEntity> events = new ArrayList<>(1);
 		events.add(getValidEventEntity());
-		when(eventRepository.findByEntityId(ArgumentMatchers.anyString())).thenReturn(events);
-		List<Event> actual = underTest.findByCorrelationId(UUID.randomUUID().toString());
+		when(eventRepository.findByCodAgenda(ArgumentMatchers.anyString())).thenReturn(events);
+		List<Event> actual = underTest.findByCodAgenda(UUID.randomUUID().toString());
 		assertNotNull(actual);
 		assertFalse(actual.isEmpty());
 		assertEquals(1, actual.size());
@@ -91,9 +90,9 @@ class EventsDaoTest {
 	
 	@Test
 	void testFindByCorrelationIdNoDataFoundCase() {
-		when(eventRepository.findByEntityId(ArgumentMatchers.anyString())).thenReturn(new ArrayList<>(0));
+		when(eventRepository.findByCodAgenda(ArgumentMatchers.anyString())).thenReturn(new ArrayList<>(0));
 		assertThrows(NoDataFoundException.class, ()->{
-			underTest.findByCorrelationId(UUID.randomUUID().toString());
+			underTest.findByCodAgenda(UUID.randomUUID().toString());
 		});
 	}
 	
@@ -101,8 +100,8 @@ class EventsDaoTest {
 	void testFindByCorrelationIdAndEventNameIdealCase() {
 		List<EventEntity> events = new ArrayList<>(1);
 		events.add(getValidEventEntity());
-		when(eventRepository.findByEntityIdAndType(ArgumentMatchers.anyString(),ArgumentMatchers.anyString())).thenReturn(events);
-		List<Event> actual = underTest.findByCorrelationIdAndEventName(UUID.randomUUID().toString(),EVENT_TYPE);
+		when(eventRepository.findByCodAgendaAndTypeEvent(ArgumentMatchers.anyString(),ArgumentMatchers.anyString())).thenReturn(events);
+		List<Event> actual = underTest.findByCodAgendaAndEventName(UUID.randomUUID().toString(),EVENT_TYPE);
 		assertNotNull(actual);
 		assertFalse(actual.isEmpty());
 		assertEquals(1, actual.size());
@@ -110,9 +109,9 @@ class EventsDaoTest {
 	
 	@Test
 	void testFindByCorrelationIdAndEventNameNoDataFoundCase() {
-		when(eventRepository.findByEntityIdAndType(ArgumentMatchers.anyString(),ArgumentMatchers.anyString())).thenReturn(new ArrayList<>(0));
+		when(eventRepository.findByCodAgendaAndTypeEvent(ArgumentMatchers.anyString(),ArgumentMatchers.anyString())).thenReturn(new ArrayList<>(0));
 		assertThrows(NoDataFoundException.class, ()->{
-			underTest.findByCorrelationIdAndEventName(UUID.randomUUID().toString(),EVENT_TYPE);
+			underTest.findByCodAgendaAndEventName(UUID.randomUUID().toString(),EVENT_TYPE);
 		});
 	}
 	
@@ -123,22 +122,30 @@ class EventsDaoTest {
 	private Event getValidEvent() {
 		Event event = getEmptyEvent();
 		event.setCreatedTime(Instant.now().toEpochMilli());
-		event.setEntityId(UUID.randomUUID().toString());
-		event.setType(EVENT_TYPE);
+		event.setCodAgenda(UUID.randomUUID().toString());
+		event.setTypeEvent(EVENT_TYPE);
 		event.setId(UUID.randomUUID().toString());
 		event.setStatus(STATUS);
-		event.setPayload(new TestEvent());
+		event.setAgendaBasica(new TestEvent());
+		event.setAgendaDetalle(new TestEvent());
+		event.setCreateDate(new Date());
+		event.setUpdateDate(new Date());
+		event.setCodUser(USER);
 		return event;
 	}
 	
 	private EventEntity getValidEventEntity() {
 		return EventEntity.builder()
 				.id(UUID.randomUUID().toString())
-				.entityId(UUID.randomUUID().toString())
+				.codAgenda(UUID.randomUUID().toString())
 				.createdTime(Instant.now().toEpochMilli())
-				.type(EVENT_TYPE)
+				.typeEvent(EVENT_TYPE)
 				.status(STATUS)
-				.payload(new TestEvent())
+				.agendaBasica(new TestEvent())
+				.agendaDetalle(new TestEvent())
+				.createDate(new Date())
+				.updateDate(new Date())
+				.codUser(USER)
 				.build();
 	}
 }

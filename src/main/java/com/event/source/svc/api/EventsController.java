@@ -34,23 +34,23 @@ public class EventsController {
 
 	@PostMapping
 	public ResponseEntity<?> pushEvent(@Valid @RequestBody  Event event) throws JsonProcessingException {
-		logger.info("Push event request :"+objectMapper.writeValueAsString(event));
+		logger.info("Colocar event request :"+objectMapper.writeValueAsString(event));
 		Event eventResponse =  eventService.save(event);
 		return ResponseEntity.ok(eventResponse);
 	}
 	
-	@GetMapping("/correlationid/{correlationId}")
-	public ResponseEntity<?> retrieveEventsByCorrelationId(@PathVariable(name = "correlationId" ,required = true) String correlationId) {
-		logger.info("Get event request for correlationId :"+correlationId);
-		List<Event> eventResponse =  eventService.findByCorrelationId(correlationId);
+	@GetMapping("/codAgenda/{codAgenda}")
+	public ResponseEntity<?> retrieveEventsByCodAgenda(@PathVariable(name = "codAgenda" ,required = true) String codAgenda) {
+		logger.info("Obtener event request for codAgenda :"+codAgenda);
+		List<Event> eventResponse =  eventService.findByCodAgenda(codAgenda);
 		return ResponseEntity.ok(eventResponse);
 	}
 	
-	@GetMapping("/correlationid/{correlationId}/eventname/{eventName}")
-	public ResponseEntity<?> retrieveEventsByCorrelationIdAndEventName(@PathVariable(name = "correlationId" ,required = true) String correlationId,
-			@PathVariable(name = "eventName",required = true) String eventName) {
-		logger.info("Get event request for correlationId :"+correlationId+" and eventname :"+eventName);
-		List<Event> eventResponse =  eventService.findByCorrelationIdAndEventName(correlationId,eventName);
+	@GetMapping("/codAgenda/{codAgenda}/eventname/{eventName}")
+	public ResponseEntity<?> retrieveEventsByCodAgendaAndEventName(@PathVariable(name = "codAgenda" ,required = true) String codAgenda,
+																   @PathVariable(name = "eventName",required = true) String eventName) {
+		logger.info("Obtener request for codAgenda :"+codAgenda+" and eventname :"+eventName);
+		List<Event> eventResponse =  eventService.findByCodAgendaAndEventName(codAgenda,eventName);
 		return ResponseEntity.ok(eventResponse);
 	}
 	

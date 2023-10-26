@@ -10,7 +10,7 @@ public interface EventService<T,EVENTID> {
 	
 	public List<T> findAll();
 	
-	public List<T> findByCorrelationId(String correlationId);
+	public List<T> findByCodAgenda(String correlationId);
 	
-	public List<T> findByCorrelationIdAndEventName(String correlationId,String eventName);
+	public List<T> findByCodAgendaAndEventName(String correlationId, String eventName);
 }

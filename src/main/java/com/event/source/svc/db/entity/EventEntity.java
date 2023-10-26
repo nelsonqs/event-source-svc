@@ -18,6 +18,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Date;
+
 @Entity
 @Table(name = "events")
 @Setter
@@ -32,11 +34,23 @@ public class EventEntity {
 	@GeneratedValue(generator = "UUID")
 	@GenericGenerator(name = "UUID",strategy = "uuid2")
 	private String id;
-	private String type;
+	@Column(name = "type_event")
+	private String typeEvent;
 	private String status;
-	private String entityId;
+	@Column(name = "cod_agenda")
+	private String codAgenda;
+	@Column(name = "created_time")
 	private long createdTime;
-	@Column(columnDefinition = "jsonb")
+	@Column(name = "agenda_basica",columnDefinition = "jsonb")
 	@Type(type = "jsonbType")
-	private Object payload;
+	private Object agendaBasica;
+	@Column(name = "agenda_detalle", columnDefinition = "jsonb")
+	@Type(type = "jsonbType")
+	private Object agendaDetalle;
+	@Column(name = "create_date")
+	private Date createDate;
+	@Column(name = "update_date")
+	private Date updateDate;
+	@Column(name = "cod_user")
+	private String codUser;
 }
